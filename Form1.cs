@@ -89,7 +89,7 @@ namespace Laba3
 
         public void graph()
         {
-
+            //
         }
 
         public void randompoints(double n)
