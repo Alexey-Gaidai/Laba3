@@ -59,7 +59,7 @@ namespace Laba3
             double X4 = 0;
             double x2y = 0;
             double count = steps.Count;
-            double a, a1, b, b1, c;
+            double a, deltaa, b, deltab, deltac;
 
 
             foreach(var p in steps)
@@ -79,7 +79,9 @@ namespace Laba3
 
             label3.Text = Convert.ToString(deltaA(X2, sumX, count, X3, X4, sumY, sumXY, x2y));
 
-            label4.Text = deltaB(X2, sumX, count, X3, X4, sumY, sumXY, x2y).ToString();
+            deltab = (X2 * sumXY * X2) + (sumY * sumX * X4) + (count * X3 * x2y) - (count * sumXY * X4) - (X2 * sumX * x2y) - (sumY * X3 * X2);
+            deltac = (X2 * sumXY * X2) + (sumY * sumX * X4) + (count * X3 * x2y) - (count * sumXY * X4) - (X2 * sumX * x2y) - (sumY * X3 * X2);
+
 
             func = "f(x) =" + a + "*x+" + b;
             func = func.Replace(",", ".");
@@ -112,26 +114,32 @@ namespace Laba3
         public double deltaA(double X2, double sumX, double count, double X3, double X4, double sumY, double sumXY, double x2y)
         {
             double[,] matrix = new double[3, 3] { { sumY, sumX, count }, { sumXY, X2, sumX }, { x2y, X3, X2 } };
-            double det = matrix[0, 0] * matrix[1, 1] * matrix[2, 2] + matrix[0, 1] * matrix[1, 2] * matrix[2, 0] +
-                matrix[0, 2] * matrix[1, 0] * matrix[2, 1] - matrix[0, 2] * matrix[2, 2] * matrix[2, 0] -
-                matrix[0, 0] * matrix[1, 2] * matrix[2, 1] - matrix[0, 1] * matrix[1, 0] * matrix[2, 2];
+            double det = matrix[0, 0] * matrix[1, 1] * matrix[2, 2] + matrix[0, 1] * matrix[1, 2] * matrix[2, 0] + matrix[0, 2] * matrix[1, 0] * matrix[2, 1] - matrix[0, 2] * matrix[2, 2] * matrix[2, 0] - matrix[0, 0] * matrix[1, 2] * matrix[2, 1] - matrix[0, 1] * matrix[1, 0] * matrix[2, 2];
             return det;
         }
-        public double deltaB(double X2, double sumX, double count, double X3, double X4, double sumY, double sumXY, double x2y)
+
+        public double DeltaB(double X2, double sumX, double count, double X3, double X4, double sumY, double sumXY, double x2y)
         {
+            double[,] matrix = new double[3, 3] { {X2, sumY, count },{X3, sumXY, sumX },{X4, x2y, X2 } };
+            double det = (matrix[0, 0] * matrix[1, 1] * matrix[2, 2]) + (matrix[0, 1] * matrix[1, 2] * matrix[2, 0]) + (matrix[0, 2] * matrix[1, 0] * matrix[2, 1]) - (matrix[0, 2] * matrix[2, 2] * matrix[2, 0]) - (matrix[0, 0] * matrix[1, 2] * matrix[2, 1]) - (matrix[0, 1] * matrix[1, 0] * matrix[2, 2]);
+            return det;
+        }
+        /*public double deltaB(double X2, double sumX, double count, double X3, double X4, double sumY, double sumXY, double x2y)
+        {
+            double det = 0;
             double[,] matrix = new double[3, 3] { { X2, sumY, count }, { X3, sumXY, sumX }, { X4, x2y, X2 } };
-            double det = matrix[0, 0] * matrix[1, 1] * matrix[2, 2] + matrix[0, 1] * matrix[1, 2] * matrix[2, 0] +
+            det = matrix[0, 0] * matrix[1, 1] * matrix[2, 2] + matrix[0, 1] * matrix[1, 2] * matrix[2, 0] +
                 matrix[0, 2] * matrix[1, 0] * matrix[2, 1] - matrix[0, 2] * matrix[2, 2] * matrix[2, 0] -
                 matrix[0, 0] * matrix[1, 2] * matrix[2, 1] - matrix[0, 1] * matrix[1, 0] * matrix[2, 2];
             return det;
-        }
+        }*/
         public double deltaC(double X2, double sumX, double count, double X3, double X4, double sumY, double sumXY, double x2y)
         {
-            double[,] matrix = new double[3, 3] { { X2, sumX, sumY }, { X3, X2, sumXY }, { X4, X3, x2y } };
-            double det = matrix[0, 0] * matrix[1, 1] * matrix[2, 2] + matrix[0, 1] * matrix[1, 2] * matrix[2, 0] +
-                matrix[0, 2] * matrix[1, 0] * matrix[2, 1] - matrix[0, 2] * matrix[2, 2] * matrix[2, 0] -
-                matrix[0, 0] * matrix[1, 2] * matrix[2, 1] - matrix[0, 1] * matrix[1, 0] * matrix[2, 2];
-            return det;
+            double[,] matrix2 = new double[3, 3] { { X2, sumX, sumY }, { X3, X2, sumXY }, { X4, X3, x2y } };
+            double det2 = matrix2[0, 0] * matrix2[1, 1] * matrix2[2, 2] + matrix2[0, 1] * matrix2[1, 2] * matrix2[2, 0] +
+                matrix2[0, 2] * matrix2[1, 0] * matrix2[2, 1] - matrix2[0, 2] * matrix2[2, 2] * matrix2[2, 0] -
+                matrix2[0, 0] * matrix2[1, 2] * matrix2[2, 1] - matrix2[0, 1] * matrix2[1, 0] * matrix2[2, 2];
+            return det2;
         }
 
 
