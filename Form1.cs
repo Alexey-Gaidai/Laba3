@@ -20,6 +20,7 @@ namespace Laba3
 
         public static List<point> steps = new List<point>();//список точек
         public string func;
+        public string func2;
 
         private static readonly string[] Scopes = { SheetsService.Scope.Spreadsheets };
         private const string SpreadsheetId = "1Kcvpqi-I6wY0HSFGehgdVp_tS70Fk2KQroZT39Z8S5Q";
@@ -48,6 +49,18 @@ namespace Laba3
             return result;
         }
 
+        private double f2(double x)//вынес подставления значения в функцию в отдельный метод
+        {
+            double result = 0;
+            Function f = new Function(func2);
+            string sklt = "f()";
+            string fx = sklt.Insert(2, x.ToString());
+            fx = fx.Replace(",", ".");
+            Expression fxx = new Expression(fx, f);
+            result = fxx.calculate();
+            return result;
+        }
+
         public void MathPart()
         {
             double sumX = 0;
@@ -59,7 +72,7 @@ namespace Laba3
             double X4 = 0;
             double x2y = 0;
             double count = steps.Count;
-            double a, deltaa, b, deltab, deltac;
+            double a, deltta, deltaa, b, deltab, deltac;
 
 
             foreach(var p in steps)
@@ -73,19 +86,25 @@ namespace Laba3
                 X4 += p.x * p.x * p.x * p.x;
                 x2y += (p.x * p.x) * p.y;
             }
+
             a = Math.Round(LinearRegerssionA(sumX, sumY, sumXY, X2, Y2, count), 4);
             b = Math.Round(LinearRegerssionB(sumX, sumY, sumXY, X2, Y2, count), 4);
-            label2.Text = Convert.ToString(delta(X2, sumX, count, X3, X4));
 
-            label3.Text = Convert.ToString(deltaA(X2, sumX, count, X3, X4, sumY, sumXY, x2y));
+            deltta = delta(X2, sumX, count, X3, X4);
+            deltaa = Math.Round(deltaA(X2, sumX, count, X3, X4, sumY, sumXY, x2y) / deltta, 4);
+            deltab = Math.Round(((X2 * sumXY * X2) + (sumY * sumX * X4) + (count * X3 * x2y) - (count * sumXY * X4) - (X2 * sumX * x2y) - (sumY * X3 * X2)) / deltta, 4);
+            deltac = Math.Round(((X2 * X2 * x2y) + (sumX * sumXY * X4) + (sumY * X3 * X3) - (sumY * X2 * X4) - (X2 * sumXY * X3) - (sumX * X3 * x2y)) / deltta, 4);
 
-            deltab = (X2 * sumXY * X2) + (sumY * sumX * X4) + (count * X3 * x2y) - (count * sumXY * X4) - (X2 * sumX * x2y) - (sumY * X3 * X2);
-            deltac = (X2 * sumXY * X2) + (sumY * sumX * X4) + (count * X3 * x2y) - (count * sumXY * X4) - (X2 * sumX * x2y) - (sumY * X3 * X2);
 
 
             func = "f(x) =" + a + "*x+" + b;
             func = func.Replace(",", ".");
+
+            func2 = "f(x) =" + deltaa + "*x^2+(" + deltab + ")*x+" + deltac;
+            func2 = func2.Replace(",", ".");
+
             label1.Text = func;
+            label2.Text = func2;
             graph();
         }
 
@@ -118,36 +137,11 @@ namespace Laba3
             return det;
         }
 
-        public double DeltaB(double X2, double sumX, double count, double X3, double X4, double sumY, double sumXY, double x2y)
-        {
-            double[,] matrix = new double[3, 3] { {X2, sumY, count },{X3, sumXY, sumX },{X4, x2y, X2 } };
-            double det = (matrix[0, 0] * matrix[1, 1] * matrix[2, 2]) + (matrix[0, 1] * matrix[1, 2] * matrix[2, 0]) + (matrix[0, 2] * matrix[1, 0] * matrix[2, 1]) - (matrix[0, 2] * matrix[2, 2] * matrix[2, 0]) - (matrix[0, 0] * matrix[1, 2] * matrix[2, 1]) - (matrix[0, 1] * matrix[1, 0] * matrix[2, 2]);
-            return det;
-        }
-        /*public double deltaB(double X2, double sumX, double count, double X3, double X4, double sumY, double sumXY, double x2y)
-        {
-            double det = 0;
-            double[,] matrix = new double[3, 3] { { X2, sumY, count }, { X3, sumXY, sumX }, { X4, x2y, X2 } };
-            det = matrix[0, 0] * matrix[1, 1] * matrix[2, 2] + matrix[0, 1] * matrix[1, 2] * matrix[2, 0] +
-                matrix[0, 2] * matrix[1, 0] * matrix[2, 1] - matrix[0, 2] * matrix[2, 2] * matrix[2, 0] -
-                matrix[0, 0] * matrix[1, 2] * matrix[2, 1] - matrix[0, 1] * matrix[1, 0] * matrix[2, 2];
-            return det;
-        }*/
-        public double deltaC(double X2, double sumX, double count, double X3, double X4, double sumY, double sumXY, double x2y)
-        {
-            double[,] matrix2 = new double[3, 3] { { X2, sumX, sumY }, { X3, X2, sumXY }, { X4, X3, x2y } };
-            double det2 = matrix2[0, 0] * matrix2[1, 1] * matrix2[2, 2] + matrix2[0, 1] * matrix2[1, 2] * matrix2[2, 0] +
-                matrix2[0, 2] * matrix2[1, 0] * matrix2[2, 1] - matrix2[0, 2] * matrix2[2, 2] * matrix2[2, 0] -
-                matrix2[0, 0] * matrix2[1, 2] * matrix2[2, 1] - matrix2[0, 1] * matrix2[1, 0] * matrix2[2, 2];
-            return det2;
-        }
-
-
         public void graph()
         {
             double min = Double.MaxValue;
             double max = Double.MinValue;
-            double step = 0.1;
+            double step = 1;
 
             for (int i = 0; i < steps.Count; i++)
             {
@@ -161,14 +155,17 @@ namespace Laba3
 
             double[] x = new double[count];
             double[] y = new double[count];
+            double[] y1 = new double[count];
 
             for (int i = 0; i < count; i++)
             {
                 x[i] = min + step * i;
-                y[i] = f(x[i]);
-                Console.WriteLine(x[i]+ " "+y[i]);
+                y[i] = Math.Round(f(x[i]), 5);
+                y1[i] = Math.Round(f2(x[i]), 5);
+                Console.WriteLine(x[i]+ " "+y1[i]);
             }
             chart1.Series[1].Points.DataBindXY(x, y);
+            chart1.Series[2].Points.DataBindXY(x, y1);
         }
 
         public void randompoints(double n)
@@ -176,8 +173,8 @@ namespace Laba3
             Random rnd = new Random();
             for (int i = 0; i < n; i++)
             {
-                int value1 = rnd.Next(0, 100);
-                int value2 = rnd.Next(0, 100);
+                int value1 = rnd.Next(0, 10);
+                int value2 = rnd.Next(0, 10);
                 point abc = new point(value1, value2);
                 steps.Add(abc);
 
