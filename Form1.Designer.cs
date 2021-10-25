@@ -48,6 +48,7 @@ namespace Laba3
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -162,6 +163,7 @@ namespace Laba3
             this.button4.TabIndex = 6;
             this.button4.Text = "Загрузить из XLS";
             this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // textBox1
             // 
@@ -187,6 +189,11 @@ namespace Laba3
             this.label2.Size = new System.Drawing.Size(35, 13);
             this.label2.TabIndex = 9;
             this.label2.Text = "label2";
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialog1.Filter = "Excel|*.xlsx";
             // 
             // Form1
             // 
@@ -232,6 +239,7 @@ namespace Laba3
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
 
