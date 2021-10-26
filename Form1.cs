@@ -326,7 +326,7 @@ namespace Laba3
 
         private async Task ReadAsync(SpreadsheetsResource.ValuesResource valuesResource)//выполняем чтение
         {
-            var response = await valuesResource.Get(SpreadsheetId, ReadRange).ExecuteAsync();
+            var response = await valuesResource.Get(textBox2.Text, ReadRange).ExecuteAsync();
             var values = response.Values;
             if (values == null || !values.Any())
             {
@@ -374,6 +374,7 @@ namespace Laba3
             }
 
             ObjWorkBook.Close(false, Type.Missing, Type.Missing); 
+            ObjWorkExcel.Quit();
             ObjWorkExcel.Quit();
             GC.Collect();
         }

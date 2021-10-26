@@ -50,6 +50,8 @@ namespace Laba3
             this.label2 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.label3 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -99,7 +101,7 @@ namespace Laba3
             this.chart1.Series.Add(series1);
             this.chart1.Series.Add(series2);
             this.chart1.Series.Add(series3);
-            this.chart1.Size = new System.Drawing.Size(575, 415);
+            this.chart1.Size = new System.Drawing.Size(575, 441);
             this.chart1.TabIndex = 1;
             this.chart1.Text = "chart1";
             // 
@@ -151,7 +153,7 @@ namespace Laba3
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(12, 452);
+            this.button3.Location = new System.Drawing.Point(12, 478);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(242, 28);
             this.button3.TabIndex = 5;
@@ -161,7 +163,7 @@ namespace Laba3
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(12, 486);
+            this.button4.Location = new System.Drawing.Point(12, 512);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(242, 28);
             this.button4.TabIndex = 6;
@@ -213,11 +215,32 @@ namespace Laba3
             this.label3.TabIndex = 10;
             this.label3.Text = "n = ";
             // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(35, 452);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(219, 20);
+            this.textBox2.TabIndex = 11;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Cambria", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label4.ForeColor = System.Drawing.Color.Black;
+            this.label4.Location = new System.Drawing.Point(12, 455);
+            this.label4.MaximumSize = new System.Drawing.Size(25, 14);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(20, 14);
+            this.label4.TabIndex = 12;
+            this.label4.Text = "id:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(835, 526);
+            this.ClientSize = new System.Drawing.Size(835, 550);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.textBox2);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -260,6 +283,8 @@ namespace Laba3
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Label label4;
     }
 }
 
