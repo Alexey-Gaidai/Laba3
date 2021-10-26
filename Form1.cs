@@ -14,6 +14,7 @@ using Google.Apis.Sheets.v4;
 using org.mariuszgromada.math.mxparser;
 using ExcelDataReader;
 using System.Data.OleDb;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace Laba3
 {
@@ -25,8 +26,7 @@ namespace Laba3
         public string func;
         public string func2;
 
-        private string fileName = string.Empty;
-        private DataTableCollection tableCollection = null;
+        string[,] list;
 
         private static readonly string[] Scopes = { SheetsService.Scope.Spreadsheets };
         private const string SpreadsheetId = "1Kcvpqi-I6wY0HSFGehgdVp_tS70Fk2KQroZT39Z8S5Q";
@@ -200,8 +200,8 @@ namespace Laba3
         }
         #endregion
 
-        //регион взаимодействия с формой
-        #region FormsDevices
+        //регион взаимодействия пользователя с формой
+        #region UserInteraction
         private void button2_Click(object sender, EventArgs e)
         {
             double count = Convert.ToDouble(textBox1.Text);
@@ -234,39 +234,29 @@ namespace Laba3
         {
             try
             {
-               openExcelFile();
-                
+
+                ExportExcel();
+
+                for (int i = 0; i < list.GetLength(0); i++)
+                {
+                    point abc = new point(Convert.ToDouble(list[i, 0]), Convert.ToDouble(list[i, 1]));
+                    steps.Add(abc);
+                }
+                foreach (var p in steps)
+                {
+                    dataGridView1.Rows.Add(p.x, p.y);
+                    chart1.Series[0].Points.AddXY(p.x, p.y);
+                }
+
             }
             catch(Exception ex)
             {
                 MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void openExcelFile()
-        {
-            OpenFileDialog opf = new OpenFileDialog();
-            opf.Filter = "Excel (*.XLSX)|*.XLSX";
-            opf.ShowDialog();
-            DataTable tb = new DataTable();
-            string filename = opf.FileName;
-            string ConStr = String.Format("Provider=Microsoft.ACE.OLEDB.12.0; Data Source={0}; Extended Properties=Excel", filename);
-            System.Data.DataSet ds = new System.Data.DataSet("EXCEL");
-            OleDbConnection cn = new OleDbConnection(ConStr);
-            cn.Open();
-            DataTable schemaTable = cn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new object[] { null, null, null, "TABLE" });
-            string sheet1 = (string)schemaTable.Rows[0].ItemArray[2];
-            string select = String.Format("SELECT * FROM [{0}]", sheet1);
-            OleDbDataAdapter ad = new OleDbDataAdapter(select, cn);
-            ad.Fill(ds);
-            tb = ds.Tables[0];
-            cn.Close();
-            dataGridView1.DataSource = tb;
-
-        }
+        }  
         #endregion
 
-        //регион работы гугл сервиса
+        //регион работы экспорта
         #region Sheets
         private static SheetsService GetSheetsService()
         {
@@ -298,9 +288,40 @@ namespace Laba3
             }
 
         }
+
+        private void ExportExcel()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.DefaultExt = "*.xls;*.xlsx";
+            ofd.Filter = "файл Excel (Spisok.xlsx)|*.xlsx";
+            ofd.Title = "Выберите файл базы данных";
+
+            if (!(ofd.ShowDialog() == DialogResult.OK))
+                MessageBox.Show("", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            Excel.Application ObjWorkExcel = new Excel.Application();
+            Excel.Workbook ObjWorkBook = ObjWorkExcel.Workbooks.Open(ofd.FileName);
+            Excel.Worksheet ObjWorkSheet = (Excel.Worksheet)ObjWorkBook.Sheets[1]; //получить 1-й лист
+
+            var lastCell = ObjWorkSheet.Cells.SpecialCells(Excel.XlCellType.xlCellTypeLastCell);//последнюю ячейку
+                                                                                                // размеры базы
+            int lastColumn = (int)lastCell.Column;
+            int lastRow = (int)lastCell.Row;
+
+            list = new string[lastRow, lastColumn];
+
+            // Перенос в промежуточный массив класса Form1: string[,] list = new string[50, 5]; 
+            for (int j = 0; j < 2; j++) //по всем колонкам
+                for (int i = 0; i < lastRow; i++) // по всем строкам
+                    list[i, j] = ObjWorkSheet.Cells[i + 1, j + 1].Text.ToString();
+
+            ObjWorkBook.Close(false, Type.Missing, Type.Missing); //закрыть не сохраняя
+            ObjWorkExcel.Quit(); // выйти из Excel
+            GC.Collect(); // убрать за собой
+        }
         #endregion
 
-        
+
     }
 
     public class point//класс для сохранения точек
