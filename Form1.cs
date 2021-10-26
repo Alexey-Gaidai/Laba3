@@ -12,8 +12,6 @@ using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
 using org.mariuszgromada.math.mxparser;
-using ExcelDataReader;
-using System.Data.OleDb;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace Laba3
@@ -45,7 +43,7 @@ namespace Laba3
 
         //регион математической стороны программы
         #region MathSide
-        public void MathPart()
+        public async void MathPart()
         {
             //переменные
             double sumX = 0;
@@ -88,7 +86,7 @@ namespace Laba3
             func = func.Replace(",", ".");
 
             //Конструируем функцию для квадратичной регрессии
-            func2 = "f(x) =" + deltaa + "*x^2+(" + deltab + ")*x+" + deltac;
+            func2 = "f(x) =" + deltaa + "*x^2+(" + deltab + ")*x+(" + deltac+")";
             func2 = func2.Replace(",", ".");
 
             //Выводим коэфиценты
@@ -96,7 +94,7 @@ namespace Laba3
             label2.Text = func2;
 
             //рисуем граф
-            graph();
+            await takegraph();
         }
 
         public double LinearRegerssionA(double sumX, double SumY, double SumXY, double X2, double Y2, double count)//расчет коэфицента А для линейной регрессии
@@ -132,6 +130,16 @@ namespace Laba3
 
         //регион логической стороны программы
         #region Logic
+        public async Task takegraph()
+        {
+            await Task.Run(() => graph());
+        }
+
+        public async Task takerandom(double n)
+        {
+            await Task.Run(() => randompoints(n));
+        }
+
 
         private void clear()
         {
@@ -146,6 +154,7 @@ namespace Laba3
             label1.Text = "";
             label2.Text = "";
         }
+
         public void graph()//отрисовка графа
         {
             double min = Double.MaxValue;
@@ -172,6 +181,12 @@ namespace Laba3
                 y[i] = Math.Round(f(x[i]), 5);
                 y1[i] = Math.Round(f2(x[i]), 5);
             }
+            Action action = () => addpoint(x, y, y1);//так как этот метод находится в другом потоке то вызываем через инвоук
+            Invoke(action);
+        }
+
+        public void addpoint(double[] x, double[] y, double [] y1)//метод добавления сплайна на график
+        {
             chart1.Series[1].Points.DataBindXY(x, y);//отрисовка
             chart1.Series[2].Points.DataBindXY(x, y1);
         }
@@ -216,21 +231,41 @@ namespace Laba3
 
         //регион взаимодействия пользователя с формой
         #region UserInteraction
-        private void button2_Click(object sender, EventArgs e)//Рандомное заполнение
+
+        private void выходToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            double count = Convert.ToDouble(textBox1.Text);
-            clear();
-            randompoints(count);
-            foreach (var p in steps)
+            this.Close();
+        }
+
+        private async void button2_Click(object sender, EventArgs e)//Рандомное заполнение
+        {
+            try
             {
-                dataGridView1.Rows.Add(p.x, p.y);
-                chart1.Series[0].Points.AddXY(p.x, p.y);
+                double count = Convert.ToDouble(textBox1.Text);
+                clear();
+                await takerandom(count);
+                foreach (var p in steps)
+                {
+                    dataGridView1.Rows.Add(p.x, p.y);
+                    chart1.Series[0].Points.AddXY(p.x, p.y);
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("n был введен неверно или не введен", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }
         private void button1_Click(object sender, EventArgs e)//Выполнить расчет
-        { 
-            MathPart();
+        {
+            if (steps.Count <= 2)
+            {
+                MessageBox.Show("Мало точек!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                MathPart();
+            }
         }
 
         
@@ -325,21 +360,28 @@ namespace Laba3
             var lastCell = ObjWorkSheet.Cells.SpecialCells(Excel.XlCellType.xlCellTypeLastCell);
             int lastColumn = (int)lastCell.Column;
             int lastRow = (int)lastCell.Row;
+            if (lastRow <= 2)
+            {
+                MessageBox.Show("Недостаточное количество точек", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                list = new string[lastRow, lastColumn];
 
-            list = new string[lastRow, lastColumn];
-
-            for (int j = 0; j < 2; j++) 
-                for (int i = 0; i < lastRow; i++) 
-                    list[i, j] = ObjWorkSheet.Cells[i + 1, j + 1].Text.ToString();
+                for (int j = 0; j < 2; j++)
+                    for (int i = 0; i < lastRow; i++)
+                        list[i, j] = ObjWorkSheet.Cells[i + 1, j + 1].Text.ToString();
+            }
 
             ObjWorkBook.Close(false, Type.Missing, Type.Missing); 
             ObjWorkExcel.Quit();
             GC.Collect();
         }
 
+
         #endregion
 
-        
+      
     }
 
     public class point//класс для сохранения точек
