@@ -191,6 +191,12 @@ namespace Laba3
             chart1.Series[2].Points.DataBindXY(x, y1);
         }
 
+        public void addpoint(point p)
+        {
+            dataGridView1.Rows.Add(p.x, p.y);
+            chart1.Series[0].Points.AddXY(p.x, p.y);
+        }
+
         public void randompoints(double n)//рандомное заполнение точек
         {
             Random rnd = new Random();
@@ -201,6 +207,11 @@ namespace Laba3
                 point abc = new point(value1, value2);
                 steps.Add(abc);
 
+            }
+            foreach (var p in steps)
+            {
+                Action action = () => addpoint(p);//так как этот метод находится в другом потоке то вызываем через инвоук
+                Invoke(action);
             }
 
         }
@@ -276,11 +287,11 @@ namespace Laba3
                 clear();
                 var serviceValues = GetSheetsService().Spreadsheets.Values;
                 await ReadAsync(serviceValues);
-                foreach (var p in steps)
+                /*foreach (var p in steps)
                 {
                     dataGridView1.Rows.Add(p.x, p.y);
                     chart1.Series[0].Points.AddXY(p.x, p.y);
-                }
+                }*/
             }
             catch(Exception ex)
             {
