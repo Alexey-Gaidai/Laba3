@@ -132,6 +132,20 @@ namespace Laba3
 
         //регион логической стороны программы
         #region Logic
+
+        private void clear()
+        {
+            textBox1.Text = "";
+            dataGridView1.Rows.Clear();
+            steps.Clear();
+            chart1.Series[0].Points.Clear();
+            chart1.Series[1].Points.Clear();
+            chart1.Series[2].Points.Clear();
+            chart1.Update();
+            dataGridView1.Update();
+            label1.Text = "";
+            label2.Text = "";
+        }
         public void graph()//отрисовка графа
         {
             double min = Double.MaxValue;
@@ -202,9 +216,10 @@ namespace Laba3
 
         //регион взаимодействия пользователя с формой
         #region UserInteraction
-        private void button2_Click(object sender, EventArgs e)
+        private void button2_Click(object sender, EventArgs e)//Рандомное заполнение
         {
             double count = Convert.ToDouble(textBox1.Text);
+            clear();
             randompoints(count);
             foreach (var p in steps)
             {
@@ -213,14 +228,15 @@ namespace Laba3
             }
 
         }
-        private void button1_Click(object sender, EventArgs e)
-        {
+        private void button1_Click(object sender, EventArgs e)//Выполнить расчет
+        { 
             MathPart();
         }
 
         
-        async private void button3_Click(object sender, EventArgs e)
+        async private void button3_Click(object sender, EventArgs e)//загрузить данные из google sheets
         {
+            clear();
             var serviceValues = GetSheetsService().Spreadsheets.Values;
             await ReadAsync(serviceValues);
             foreach (var p in steps)
@@ -230,11 +246,11 @@ namespace Laba3
             }
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void button4_Click(object sender, EventArgs e)//загрузить данные из эксель таблицы
         {
+            clear();
             try
             {
-
                 ExportExcel();
 
                 for (int i = 0; i < list.GetLength(0); i++)
@@ -247,18 +263,21 @@ namespace Laba3
                     dataGridView1.Rows.Add(p.x, p.y);
                     chart1.Series[0].Points.AddXY(p.x, p.y);
                 }
-
             }
             catch(Exception ex)
             {
                 MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }  
+        }
+        private void очиститьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            clear();
+        }
         #endregion
 
         //регион работы экспорта
         #region Sheets
-        private static SheetsService GetSheetsService()
+        private static SheetsService GetSheetsService()//получаем ответ от сервера
         {
             using (var stream = new FileStream(GoogleCredentialsFileName, FileMode.Open, FileAccess.Read))
             {
@@ -270,7 +289,7 @@ namespace Laba3
             }
         }
 
-        private async Task ReadAsync(SpreadsheetsResource.ValuesResource valuesResource)
+        private async Task ReadAsync(SpreadsheetsResource.ValuesResource valuesResource)//выполняем чтение
         {
             var response = await valuesResource.Get(SpreadsheetId, ReadRange).ExecuteAsync();
             var values = response.Values;
@@ -289,7 +308,7 @@ namespace Laba3
 
         }
 
-        private void ExportExcel()
+        private void ExportExcel()//получение точек из эксель
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.DefaultExt = "*.xls;*.xlsx";
@@ -301,27 +320,26 @@ namespace Laba3
 
             Excel.Application ObjWorkExcel = new Excel.Application();
             Excel.Workbook ObjWorkBook = ObjWorkExcel.Workbooks.Open(ofd.FileName);
-            Excel.Worksheet ObjWorkSheet = (Excel.Worksheet)ObjWorkBook.Sheets[1]; //получить 1-й лист
+            Excel.Worksheet ObjWorkSheet = (Excel.Worksheet)ObjWorkBook.Sheets[1];
 
-            var lastCell = ObjWorkSheet.Cells.SpecialCells(Excel.XlCellType.xlCellTypeLastCell);//последнюю ячейку
-                                                                                                // размеры базы
+            var lastCell = ObjWorkSheet.Cells.SpecialCells(Excel.XlCellType.xlCellTypeLastCell);
             int lastColumn = (int)lastCell.Column;
             int lastRow = (int)lastCell.Row;
 
             list = new string[lastRow, lastColumn];
 
-            // Перенос в промежуточный массив класса Form1: string[,] list = new string[50, 5]; 
-            for (int j = 0; j < 2; j++) //по всем колонкам
-                for (int i = 0; i < lastRow; i++) // по всем строкам
+            for (int j = 0; j < 2; j++) 
+                for (int i = 0; i < lastRow; i++) 
                     list[i, j] = ObjWorkSheet.Cells[i + 1, j + 1].Text.ToString();
 
-            ObjWorkBook.Close(false, Type.Missing, Type.Missing); //закрыть не сохраняя
-            ObjWorkExcel.Quit(); // выйти из Excel
-            GC.Collect(); // убрать за собой
+            ObjWorkBook.Close(false, Type.Missing, Type.Missing); 
+            ObjWorkExcel.Quit();
+            GC.Collect();
         }
+
         #endregion
 
-
+        
     }
 
     public class point//класс для сохранения точек

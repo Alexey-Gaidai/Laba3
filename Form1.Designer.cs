@@ -49,6 +49,7 @@ namespace Laba3
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -60,9 +61,9 @@ namespace Laba3
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.X,
             this.Y});
-            this.dataGridView1.Location = new System.Drawing.Point(12, 123);
+            this.dataGridView1.Location = new System.Drawing.Point(12, 99);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(239, 391);
+            this.dataGridView1.Size = new System.Drawing.Size(242, 313);
             this.dataGridView1.TabIndex = 0;
             // 
             // X
@@ -81,7 +82,7 @@ namespace Laba3
             this.chart1.ChartAreas.Add(chartArea1);
             legend1.Name = "Legend1";
             this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(273, 123);
+            this.chart1.Location = new System.Drawing.Point(260, 99);
             this.chart1.Name = "chart1";
             series1.ChartArea = "ChartArea1";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
@@ -98,15 +99,16 @@ namespace Laba3
             this.chart1.Series.Add(series1);
             this.chart1.Series.Add(series2);
             this.chart1.Series.Add(series3);
-            this.chart1.Size = new System.Drawing.Size(562, 391);
+            this.chart1.Size = new System.Drawing.Size(575, 415);
             this.chart1.TabIndex = 1;
             this.chart1.Text = "chart1";
             // 
             // button1
             // 
+            this.button1.Font = new System.Drawing.Font("Cambria", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.button1.Location = new System.Drawing.Point(597, 27);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(226, 90);
+            this.button1.Size = new System.Drawing.Size(226, 66);
             this.button1.TabIndex = 2;
             this.button1.Text = "Расчитать";
             this.button1.UseVisualStyleBackColor = true;
@@ -128,6 +130,7 @@ namespace Laba3
             this.очиститьToolStripMenuItem.Name = "очиститьToolStripMenuItem";
             this.очиститьToolStripMenuItem.Size = new System.Drawing.Size(74, 20);
             this.очиститьToolStripMenuItem.Text = "Очистить ";
+            this.очиститьToolStripMenuItem.Click += new System.EventHandler(this.очиститьToolStripMenuItem_Click);
             // 
             // выходToolStripMenuItem
             // 
@@ -137,7 +140,7 @@ namespace Laba3
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(12, 520);
+            this.button2.Location = new System.Drawing.Point(12, 418);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(175, 28);
             this.button2.TabIndex = 4;
@@ -147,9 +150,9 @@ namespace Laba3
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(273, 520);
+            this.button3.Location = new System.Drawing.Point(12, 452);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(175, 28);
+            this.button3.Size = new System.Drawing.Size(242, 28);
             this.button3.TabIndex = 5;
             this.button3.Text = "Загрузить из Sheets";
             this.button3.UseVisualStyleBackColor = true;
@@ -157,9 +160,9 @@ namespace Laba3
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(512, 520);
+            this.button4.Location = new System.Drawing.Point(12, 486);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(175, 28);
+            this.button4.Size = new System.Drawing.Size(242, 28);
             this.button4.TabIndex = 6;
             this.button4.Text = "Загрузить из XLS";
             this.button4.UseVisualStyleBackColor = true;
@@ -167,39 +170,54 @@ namespace Laba3
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(12, 554);
+            this.textBox1.Location = new System.Drawing.Point(220, 421);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(175, 20);
+            this.textBox1.Size = new System.Drawing.Size(34, 20);
             this.textBox1.TabIndex = 7;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(74, 41);
+            this.label1.Font = new System.Drawing.Font("Cambria", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label1.Location = new System.Drawing.Point(8, 36);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.Size = new System.Drawing.Size(51, 19);
             this.label1.TabIndex = 8;
-            this.label1.Text = "label1";
+            this.label1.Text = "f(x) = ";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(74, 66);
+            this.label2.Font = new System.Drawing.Font("Cambria", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(8, 67);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 13);
+            this.label2.Size = new System.Drawing.Size(51, 19);
             this.label2.TabIndex = 9;
-            this.label2.Text = "label2";
+            this.label2.Text = "f(x) = ";
             // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             this.openFileDialog1.Filter = "Excel|*.xlsx";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Cambria", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label3.ForeColor = System.Drawing.Color.Black;
+            this.label3.Location = new System.Drawing.Point(193, 424);
+            this.label3.MaximumSize = new System.Drawing.Size(25, 14);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(24, 14);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "n = ";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(835, 596);
+            this.ClientSize = new System.Drawing.Size(835, 526);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox1);
@@ -240,6 +258,7 @@ namespace Laba3
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Label label3;
     }
 }
 
