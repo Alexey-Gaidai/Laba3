@@ -255,11 +255,11 @@ namespace Laba3
                 double count = Convert.ToDouble(textBox1.Text);
                 clear();
                 await takerandom(count);
-                foreach (var p in steps)
+                /*foreach (var p in steps)
                 {
                     dataGridView1.Rows.Add(p.x, p.y);
                     chart1.Series[0].Points.AddXY(p.x, p.y);
-                }
+                }*/
             }
             catch(Exception ex)
             {
@@ -287,11 +287,11 @@ namespace Laba3
                 clear();
                 var serviceValues = GetSheetsService().Spreadsheets.Values;
                 await ReadAsync(serviceValues);
-                /*foreach (var p in steps)
+                foreach (var p in steps)
                 {
                     dataGridView1.Rows.Add(p.x, p.y);
                     chart1.Series[0].Points.AddXY(p.x, p.y);
-                }*/
+                }
             }
             catch(Exception ex)
             {
