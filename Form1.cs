@@ -271,13 +271,20 @@ namespace Laba3
         
         async private void button3_Click(object sender, EventArgs e)//загрузить данные из google sheets
         {
-            clear();
-            var serviceValues = GetSheetsService().Spreadsheets.Values;
-            await ReadAsync(serviceValues);
-            foreach (var p in steps)
+            try
             {
-                dataGridView1.Rows.Add(p.x, p.y);
-                chart1.Series[0].Points.AddXY(p.x, p.y);
+                clear();
+                var serviceValues = GetSheetsService().Spreadsheets.Values;
+                await ReadAsync(serviceValues);
+                foreach (var p in steps)
+                {
+                    dataGridView1.Rows.Add(p.x, p.y);
+                    chart1.Series[0].Points.AddXY(p.x, p.y);
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
